@@ -138,10 +138,10 @@ class _ConverterViewState extends State<ConverterView> {
       decoration: BoxDecoration(
         color: const Color(0xFF121212),
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: const Color(0xFF39FF14).withOpacity(0.4)),
+        border: Border.all(color: const Color(0xFF39FF14).withAlpha((0.4 * 255).round())),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF39FF14).withOpacity(0.05),
+            color: const Color(0xFF39FF14).withAlpha((0.05 * 255).round()),
             blurRadius: 15,
             spreadRadius: 1,
           )

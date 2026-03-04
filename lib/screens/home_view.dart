@@ -115,7 +115,7 @@ class HomeView extends StatelessWidget {
         fontWeight: FontWeight.bold,
         color: const Color(0xFF39FF14),
         shadows: [
-          Shadow(blurRadius: 25, color: const Color(0xFF39FF14).withOpacity(0.8)),
+          Shadow(blurRadius: 25, color: const Color(0xFF39FF14).withAlpha((0.8 * 255).round())),
         ],
       ),
     );
@@ -126,8 +126,8 @@ class HomeView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.green.withOpacity(0.3)),
-        color: Colors.green.withOpacity(0.05),
+        border: Border.all(color: Colors.green.withAlpha((0.3 * 255).round())),
+        color: Colors.green.withAlpha((0.05 * 255).round()),
       ),
       child: const Text(
         "📈 +0.24% DAILY YIELD",
