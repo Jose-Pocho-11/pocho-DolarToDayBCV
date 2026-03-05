@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dolar/data/model/dolar_response.dart';
 import 'package:dolar/data/repository.dart';
 
@@ -61,13 +63,30 @@ class _DolartodayScreenState extends State<DolartodayScreen> {
               List<DolarResponse> rates = snapshot.data!.whereType<DolarResponse>().toList();
 
               // ==========================================
-              // ESTO ERA LO QUE TE FALTABA AGREGAR:
               // Guardamos el dato y actualizamos el widget
               // ==========================================
               if (rates.isNotEmpty) {
                 final precioOficial = rates.first.promedio.toStringAsFixed(2);
-                HomeWidget.saveWidgetData<String>('precio_oficial', precioOficial);
-                HomeWidget.updateWidget(name: 'DolarWidgetProvider');
+                print('Actualizando widget con precio: $precioOficial'); // Debug
+                
+                // Solo ejecutar en Android, no en web
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  try {
+                    if (defaultTargetPlatform == TargetPlatform.android) {
+                      // Guardar con HomeWidget para que el widget lo lea
+                      await HomeWidget.saveWidgetData<String>('precio_oficial', precioOficial);
+                      await HomeWidget.updateWidget(name: 'DolarWidgetProvider');
+                      
+                      // También guardar en SharedPreferences como backup
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setString('precio_oficial', precioOficial);
+                      
+                      print('Widget actualizado correctamente'); // Debug
+                    }
+                  } catch (e) {
+                    print('Error actualizando widget: $e'); // Debug
+                  }
+                });
               }
               // ==========================================
 
@@ -85,7 +104,10 @@ class _DolartodayScreenState extends State<DolartodayScreen> {
 Future<void> updateWidgetData(List<DolarResponse> rates) async {
   if (rates.isNotEmpty) {
     final precioOficial = rates.first.promedio.toStringAsFixed(2);
-    await HomeWidget.saveWidgetData<String>('precio_oficial', precioOficial);
-    await HomeWidget.updateWidget(name: 'DolarWidgetProvider');
+    // Solo ejecutar en Android, no en web
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await HomeWidget.saveWidgetData<String>('precio_oficial', precioOficial);
+      await HomeWidget.updateWidget(name: 'DolarWidgetProvider');
+    }
   }
 }
