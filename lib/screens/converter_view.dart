@@ -24,6 +24,33 @@ class _ConverterViewState extends State<ConverterView> {
     }
   }
 
+  String _formatAmount(double amount) {
+    if (amount >= 1000) {
+      return amount.toStringAsFixed(2).replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+        (Match m) => '${m[1]},'
+      );
+    }
+    return amount.toStringAsFixed(2);
+  }
+
+  String _formatInputAmount(String amount) {
+    if (amount.isEmpty) return amount;
+    
+    // Remove existing commas for parsing
+    String cleanAmount = amount.replaceAll(',', '');
+    
+    // Parse and reformat with commas
+    double? parsed = double.tryParse(cleanAmount);
+    if (parsed != null && parsed >= 1000) {
+      return parsed.toStringAsFixed(2).replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+        (Match m) => '${m[1]},'
+      );
+    }
+    return amount;
+  }
+
   void _calculateConversion() {
     if (_amountText.isEmpty || _selectedRate == null) {
       setState(() => _convertedResult = 0.0);
@@ -155,7 +182,7 @@ class _ConverterViewState extends State<ConverterView> {
             style: const TextStyle(color: Colors.white54, fontSize: 10, letterSpacing: 2), // Letra más pequeña
           ),
           Text(
-            _amountText.isEmpty ? "0" : _amountText,
+            _amountText.isEmpty ? "0" : _formatInputAmount(_amountText),
             style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold), // De 35 a 28
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -166,7 +193,7 @@ class _ConverterViewState extends State<ConverterView> {
             style: const TextStyle(color: Colors.white54, fontSize: 10, letterSpacing: 2),
           ),
           Text(
-            _convertedResult == 0.0 ? "0.00" : _convertedResult.toStringAsFixed(2),
+            _convertedResult == 0.0 ? "0.00" : _formatAmount(_convertedResult),
             style: const TextStyle(color: Color(0xFF39FF14), fontSize: 32, fontWeight: FontWeight.bold), // De 40 a 32
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
