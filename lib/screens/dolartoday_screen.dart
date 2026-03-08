@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dolar/data/model/dolar_response.dart';
 import 'package:dolar/data/repository.dart';
 
 // Importamos las nuevas vistas modulares
 import 'package:dolar/screens/home_view.dart';
 import 'package:dolar/screens/converter_view.dart';
-import 'package:home_widget/home_widget.dart'; // Librería del widget
+// import 'package:home_widget/home_widget.dart'; // Librería del widget (comentado para evitar errores)
+// import 'package:shared_preferences/shared_preferences.dart'; // Comentado para evitar errores
 
 class DolartodayScreen extends StatefulWidget {
   const DolartodayScreen({super.key});
@@ -69,6 +68,8 @@ class _DolartodayScreenState extends State<DolartodayScreen> {
                 final precioOficial = rates.first.promedio.toStringAsFixed(2);
                 print('Actualizando widget con precio: $precioOficial'); // Debug
                 
+                // Código de widget comentado para evitar errores de dependencias
+                /*
                 // Solo ejecutar en Android, no en web
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
                   try {
@@ -87,6 +88,7 @@ class _DolartodayScreenState extends State<DolartodayScreen> {
                     print('Error actualizando widget: $e'); // Debug
                   }
                 });
+                */
               }
               // ==========================================
 
@@ -100,7 +102,10 @@ class _DolartodayScreenState extends State<DolartodayScreen> {
       ),
     );
   }
-}// Función para actualizar el widget desde el background (opcional)
+}
+
+/*
+// Función para actualizar el widget desde el background (opcional)
 Future<void> updateWidgetData(List<DolarResponse> rates) async {
   if (rates.isNotEmpty) {
     final precioOficial = rates.first.promedio.toStringAsFixed(2);
@@ -111,3 +116,4 @@ Future<void> updateWidgetData(List<DolarResponse> rates) async {
     }
   }
 }
+*/
